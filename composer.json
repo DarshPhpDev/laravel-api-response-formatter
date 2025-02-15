@@ -1,0 +1,28 @@
+{
+    "name": "darshphpdev/laravel-api-response-formatter",
+    "description": "A Laravel package for standardized API responses",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "DarshPhpDev\\LaravelApiResponseFormatter\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "Mustafa Ahmed",
+            "email": "mustafa.softcode@gmail.com"
+        }
+    ],
+    "require": {},
+    "extra": {
+        "laravel": {
+            "providers": [
+                "DarshPhpDev\\LaravelApiResponseFormatter\\ApiResponseServiceProvider"
+            ]
+        }
+    }
+}

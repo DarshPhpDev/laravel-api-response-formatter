@@ -198,7 +198,7 @@ Enable logging to log all API responses for debugging:
 ----------
 ### Error Messages
 
-Enable logging to log all API responses for debugging:
+Customize status code messages:
 
 ```php
 'error_messages' => [

@@ -1,3 +1,4 @@
+
 <p align="center"><img src="/art/socialcard.png" alt="Social Card of Laravel Api Response Formatter"></p>
 
 # Laravel Api Response Formatter
@@ -16,9 +17,10 @@ A powerful and flexible Laravel package for standardizing API responses. This pa
    - [Custom Headers](#custom-headers)
 3. [Configuration](#configuration)
 4. [Exception Handling](#exception-handling)
-5. [Compatibility](#compatibility)
-6. [Contributing](#contributing)
-7. [License](#license)
+5. [Testing](#testing)
+6. [Compatibility](#compatibility)
+7. [Contributing](#contributing)
+8. [License](#license)
 
 ---
 
@@ -266,6 +268,12 @@ class UserController extends Controller
         "data": null
     }
     ```
+
+## Testing
+To run the test suite, use the following command:
+```bash
+composer test
+```
 
 ## Compatibility
 

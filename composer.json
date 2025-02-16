@@ -17,12 +17,18 @@
             "email": "mustafa.softcode@gmail.com"
         }
     ],
-    "require": {},
     "extra": {
         "laravel": {
             "providers": [
                 "DarshPhpDev\\LaravelApiResponseFormatter\\ApiResponseServiceProvider"
             ]
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.6",
+        "orchestra/testbench": "^6.47"
+    },
+    "scripts": {
+        "test": "phpunit"
     }
 }

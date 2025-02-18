@@ -6,18 +6,21 @@ use Illuminate\Support\ServiceProvider;
 
 class ApiResponseServiceProvider extends ServiceProvider
 {
-    public function register()
+    // Define path as a constant to avoid repetition and make maintenance easier
+    private const CONFIG_PATH = __DIR__ . '/Config/api-response.php';
+    
+    public function register(): void
     {
         // Merge package configuration with application configuration
-        $this->mergeConfigFrom(__DIR__ . '/Config/api-response.php', 'api-response');
+        $this->mergeConfigFrom(self::CONFIG_PATH, 'api-response');
     }
 
-    public function boot()
+    public function boot(): void
     {
         // Publish configuration file
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/Config/api-response.php' => config_path('api-response.php'),
+                self::CONFIG_PATH => config_path('api-response.php'),
             ], 'api-response-config');
         }
 

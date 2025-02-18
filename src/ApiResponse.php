@@ -7,17 +7,17 @@ use Illuminate\Pagination\AbstractPaginator;
 
 class ApiResponse
 {
-    // Properties for method chaining
-    private $data = null;
-    private $code = 200;
-    private $message = null;
-    private $error = false;
-    private $validationErrors = [];
-    private $headers = [];
+    // Method chaining properties
+    private mixed $data = null;
+    private int $code = 200;
+    private ?string $message = null;
+    private bool $error = false;
+    private array $validationErrors = [];
+    private array $headers = [];
 
     // Configuration properties
-    private $config;
-    private $keys;
+    private array $config;
+    private array $keys;
 
     /**
      * Constructor.
@@ -37,8 +37,7 @@ class ApiResponse
      */
     private function getErrorMessage(int $code): string
     {
-        $errorMessages = $this->config['error_messages'] ?? [];
-        return $errorMessages[$code] ?? 'Unknown Error';
+        return $this->config['error_messages'][$code] ?? 'Unknown Error';
     }
 
     /**
@@ -47,7 +46,7 @@ class ApiResponse
      * @param mixed $data
      * @return $this
      */
-    public function data($data = null): self
+    public function data(mixed $data = null): self
     {
         $this->data = $data;
         return $this;
@@ -71,7 +70,7 @@ class ApiResponse
      * @param string $message
      * @return $this
      */
-    public function message(string $message = null): self
+    public function message(?string $message = null): self
     {
         $this->message = $message;
         return $this;
@@ -129,12 +128,13 @@ class ApiResponse
      * @param mixed $data
      * @return JsonResponse
      */
-    public function send($data = null): JsonResponse
+    public function send(mixed $data = null): JsonResponse
     {
-        if($data)
+        if (func_num_args() > 0) {
             $this->data = $data;
-        // Use predefined error message if no message exists
-        $this->message = $this->message ?? $this->getErrorMessage($this->code);
+        }
+
+        $this->message ??= $this->getErrorMessage($this->code);
 
         // Format paginated data
         if ($this->data instanceof AbstractPaginator) {
@@ -157,7 +157,12 @@ class ApiResponse
             logger()->info('API Response:', $response);
         }
 
-        return response()->json($response, $this->code, $this->headers, JSON_UNESCAPED_UNICODE);
+        return response()->json(
+            $response, 
+            $this->code, 
+            $this->headers, 
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**

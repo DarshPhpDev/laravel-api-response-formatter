@@ -2,47 +2,60 @@
 
 namespace DarshPhpDev\LaravelApiResponseFormatter\Traits;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Throwable;
 
 trait HandlesApiExceptions
 {
     /**
-     * Handle exceptions and return a formatted API response.
-     *
-     * @param \Throwable $e
-     * @return \Illuminate\Http\JsonResponse
+     * Maps exception types to their handlers
      */
-    protected function handleApiException(\Throwable $e): \Illuminate\Http\JsonResponse
+    private array $exceptionHandlers = [];
+
+    /**
+     * Initialize exception handlers
+     */
+    private function initializeExceptionHandlers(): void
     {
-        $handlers = [
-            ValidationException::class => function ($e) {
-                return api_response()
+        $this->exceptionHandlers = [
+            ValidationException::class => fn(ValidationException $e): JsonResponse => 
+                api_response()
                     ->error()
                     ->code(422)
                     ->message('Validation Error')
                     ->validationErrors($e->errors())
-                    ->send();
-            },
-            ModelNotFoundException::class => function ($e) {
-                return api_response()
+                    ->send(),
+
+            ModelNotFoundException::class => fn(ModelNotFoundException $e): JsonResponse => 
+                api_response()
                     ->error()
                     ->code(404)
                     ->message('Resource Not Found')
-                    ->send();
-            },
-            HttpException::class => function ($e) {
-                return api_response()
+                    ->send(),
+
+            HttpException::class => fn(HttpException $e): JsonResponse => 
+                api_response()
                     ->error()
                     ->code($e->getStatusCode())
                     ->message($e->getMessage())
-                    ->send();
-            },
+                    ->send(),
         ];
+    }
 
-        // Find the handler for the exception
-        foreach ($handlers as $exceptionType => $handler) {
+    /**
+     * Handle exceptions and return a formatted API response.
+     */
+    protected function handleApiException(Throwable $e): JsonResponse
+    {
+        if (empty($this->exceptionHandlers)) {
+            $this->initializeExceptionHandlers();
+        }
+
+        // Find and execute the handler for the exception
+        foreach ($this->exceptionHandlers as $exceptionType => $handler) {
             if ($e instanceof $exceptionType) {
                 return $handler($e);
             }
